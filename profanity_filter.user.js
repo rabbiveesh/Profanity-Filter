@@ -19,7 +19,8 @@
 
 
     // The string that replaces offending words.
-    const replaceString = "*bleep*";
+    const replaceString = "*CABBAGE*";
+    const replacePorn = "*חס ושלום*";
 
     // If useCustomWords is true, then customWords is used as the word list and the default list will not be used. Otherwise, it uses a pre-compiled version of the default list for performance.
     // The words list does not have to include endings like plurals or "ing", as they will always be handled.
@@ -35,8 +36,12 @@
     // --------------------
 
 
-    let wordString = useCustomWords ? "\\b(?:" + customWords.join("|") + ")[tgkp]??(?=(?:ing?(?:ess)??|ed|i??er|a)??(?:e??[syz])??\\b)" : "\\b(?:(?:f(?:u(?:ck(?:me)??|k)|a(?:g(?:(?:g[eio]|o)t)??|tass)|(?:cu|vc)k)|b(?:u(?:llshit|ttfuck)|[!i]tch|astard)|ass(?:(?:hol|wip)e|clown|fuck|kiss)??|d(?:amn|umbass|ouche(?:bag)??|ipshit)|p(?:hu(?:c?k|q)|iss(?:off)??)|sh(?:it(?:full)??|!t)|moth(?:er|a)fuck|c(?:rap|unt)|goddamn|jackass|nigg))[tgkp]??(?=(?:ing?(?:ess)??|ed|i??er|a)??(?:e??[syz])??\\b)";
+    let wordString = useCustomWords ? "\\b(?:" + customWords.join("|") + ")[tgkp]??(?=(?:ing?(?:ess)??|ed|i??er|a)??(?:e??[syz])??\\b)" : "\\b(?:(?:f(?:u(?:ck(?:me)??|k)|a(?:g(?:(?:g[eio]|o)t)??|tass)|(?:cu|vc)k)|b(?:u(?:llshit|ttfuck)|[!i]tch|astard)|ass(?:(?:hol|wip)e|clown|fuck|kiss)??|d(?:amn|umbass|ouche(?:bag)??|ipshit)|p(?:hu(?:c?k|q)|(?:o|0)rn|r(?:0|o)n|iss(?:off)??)|sh(?:it(?:full)??|!t)|moth(?:er|a)fuck|c(?:rap|unt)|goddamn|jackass|nigg))[tgkp]??(?=(?:ing?(?:ess)??|ed|i??er|a)??(?:e??[syz])??\\b)";
     const wordsFilter = new RegExp(wordString, "gi");
+    wordString = null;
+
+    let wordString = "p(?:(?:o|0)rn|r(?:o|0)n)";
+    const pornFilter = new RegExp(wordString, "gi");
     wordString = null;
 
     const findText = document.createExpression(".//text()[string-length() > 2 and not(parent::script or parent::code)]", null);
@@ -54,6 +59,7 @@
         // Do title first because it is always visible
         if (wordsFilter.test(document.title))
         {
+            document.title = document.title.replace(pornFilter, replacePorn);
             document.title = document.title.replace(wordsFilter, replaceString);
         }
 
@@ -131,8 +137,9 @@
     // Filters a textNode
     function filterNode(node)
     {
-        if (wordsFilter.test(node.data) && !node.parentNode.isContentEditable)
+        if (wordsFilter.test(node.data)  && !node.parentNode.isContentEditable)
         {
+            node.data = node.data.replace(pornFilter, replacePorn);
             node.data = node.data.replace(wordsFilter, replaceString);
         }
     }
