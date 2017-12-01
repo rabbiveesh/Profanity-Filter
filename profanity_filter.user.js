@@ -36,12 +36,17 @@
     // --------------------
 
 
-    let wordString = useCustomWords ? "\\b(?:" + customWords.join("|") + ")[tgkp]??(?=(?:ing?(?:ess)??|ed|i??er|a)??(?:e??[syz])??\\b)" : "\\b(?:(?:f(?:u(?:ck(?:me)??|k)|a(?:g(?:(?:g[eio]|o)t)??|tass)|(?:cu|vc)k)|b(?:u(?:llshit|ttfuck)|[!i]tch|astard)|ass(?:(?:hol|wip)e|clown|fuck|kiss)??|d(?:amn|umbass|ouche(?:bag)??|ipshit)|p(?:hu(?:c?k|q)|iss(?:off)??)|sh(?:it(?:full)??|!t)|moth(?:er|a)fuck|c(?:rap|unt)|goddamn|jackass|nigg))[tgkp]??(?=(?:ing?(?:ess)??|ed|i??er|a)??(?:e??[syz])??\\b)";
+    let wordString = useCustomWords ? "\\b(?:" + customWords.join("|") + ")[tgkp]??(?=(?:ing?(?:ess)??|ed|i??er|a)??(?:e??[syz])??\\b)" : "\\b(?:(?:f(?:u(?:ck(?:me)??|k)|a(?:g(?:(?:g[eio]|o)t)??|tass)|(?:cu|vc)k)|b(?:u(?:llshit|ttfuck)|[!i]tch|astard)|ass(?:(?:hol|wip)e|clown|fuck|kiss)??|d(?:amn|umbass|ouche(?:bag)??|ipshit)|p(?:hu(?:c?k|q)|iss(?:off)??)|s(?:h(?:it(?:full)??|!t)|lut)|moth(?:er|a)fuck|c(?:rap|unt)|goddamn|jackass|nigg))[tgkp]??(?=(?:ing?(?:ess)??|ed|i??er|a)??(?:e??[syz])??\\b)";
     const wordsFilter = new RegExp(wordString, "gi");
     wordString = null;
 
-    let pornString = "p(?:(?:o|0)rn|r(?:o|0)n)";
+  // we need to get a bit more picky about this, and not block out
+  // pronounce or pronate
+    let pornString = "p(?:(?:o|0)rn.*\\b|r(?:on(?:\\b|o\\b|(?:star|ography).*\\b)|0n.*\\b))";
     const pornFilter = new RegExp(pornString, "gi");
+
+    let secondString = "\\b(?:cum(?:shot)??|dick(?:head)??|cock|pussy)[m]??(?=(?:ing?(?:ess)??|ed|i??er|a)??(?:e??[syz])??\\b)";
+    const secondaryFilter = new RegExp(secondString, "gi");
 
     const findText = document.createExpression(".//text()[string-length() > 2 and not(parent::script or parent::code)]", null);
 
@@ -60,6 +65,7 @@
         {
             document.title = document.title.replace(pornFilter, replacePorn);
             document.title = document.title.replace(wordsFilter, replaceString);
+            document.title = document.title.replace(secondaryFilter, replaceString);
         }
 
         filterNodeTree(document.body);
@@ -140,6 +146,7 @@
         {
             node.data = node.data.replace(pornFilter, replacePorn);
             node.data = node.data.replace(wordsFilter, replaceString);
+            node.data = node.data.replace(secondaryFilter, replaceString);
         }
     }
 
