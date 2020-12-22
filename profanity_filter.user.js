@@ -7,6 +7,8 @@
 // @include       http://*
 // @include       https://*
 // @grant         none
+// @updateURL     https://github.com/rabbiveesh/Profanity-Filter/raw/master/profanity_filter.user.js
+// @downloadURL   https://github.com/rabbiveesh/Profanity-Filter/raw/master/profanity_filter.user.js
 // ==/UserScript==
 
 
